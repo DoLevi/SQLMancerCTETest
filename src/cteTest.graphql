@@ -1,0 +1,13 @@
+type User @model(pk: "id", readOnly: true, cte: """SELECT * FROM users""") {
+    username: String!
+    hobbies: [Hobby!]! @relate(on: { from: "id", to: "user_id" })
+}
+
+type Hobby @model(pk: "id", readOnly: true, table: "hobbies") {
+    title: String!
+    user: User! @relate(on: { from: "user_id", to: "id" })
+}
+
+type Query @sqlmancer(dialect: POSTGRES) {
+    hobbies(username: String!): [Hobby!]!
+}
